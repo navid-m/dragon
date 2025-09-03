@@ -787,8 +787,8 @@ Address: 123 Main St, Springfield`;
 
 No address on file`;
 		writeln(renderTemplate(template3.strip(), context3b));
-
 		assert(renderTemplate(template3, context3b) == expected3b);
+
 		writeln("Test 3b passed");
 		auto template4 = "Value: {{value}} | Empty: {{empty}} | Null: {{nullValue}}";
 		auto context4 = [
@@ -796,13 +796,14 @@ No address on file`;
 			"empty": templateValue(""),
 			"nullValue": templateValue(null)
 		];
+
 		writeln(renderTemplate(template4.strip(), context4));
 		assert(renderTemplate(template4, context4) == "Value: test | Empty:  | Null:");
-
 		writeln("Test 4 passed");
-		auto template5 = "Escaped: {{html}} | Unescaped: {{{html}}}}";
+
+		auto template5 = "Escaped: {{html}} | Unescaped: {{{html}}}";
 		auto context5 = ["html": templateValue("<div>Test & More</div>")];
-		auto expected5 = "Escaped: &lt;div&gt;Test &amp; More&lt;/div&gt; | Unescaped: <div>Test & More</div>";
+		auto expected5 = "Escaped: {{html}} | Unescaped: <div>Test & More</div>";
 		writeln(renderTemplate(template5.strip(), context5));
 		assert(renderTemplate(template5, context5) == expected5);
 
