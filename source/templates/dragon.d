@@ -15,14 +15,10 @@ abstract class TemplateValue
 	abstract bool isObject() const;
 
 	TemplateArray asArray()
-	{
-		return cast(TemplateArray) this;
-	}
+		=> cast(TemplateArray) this;
 
 	TemplateObject asObject()
-	{
-		return cast(TemplateObject) this;
-	}
+		=> cast(TemplateObject) this;
 }
 
 class TemplateString : TemplateValue
@@ -35,24 +31,16 @@ class TemplateString : TemplateValue
 	}
 
 	override string toString() const
-	{
-		return value;
-	}
+		=> value;
 
 	override bool isTruthy() const
-	{
-		return value.length > 0;
-	}
+		=> value.length > 0;
 
 	override bool isArray() const
-	{
-		return false;
-	}
+		=> false;
 
 	override bool isObject() const
-	{
-		return false;
-	}
+		=> false;
 }
 
 class TemplateNumber : TemplateValue
@@ -79,19 +67,13 @@ class TemplateNumber : TemplateValue
 	}
 
 	override bool isTruthy() const
-	{
-		return value != 0.0;
-	}
+		=> value != 0.0;
 
 	override bool isArray() const
-	{
-		return false;
-	}
+		=> false;
 
 	override bool isObject() const
-	{
-		return false;
-	}
+		=> false;
 }
 
 class TemplateBool : TemplateValue
