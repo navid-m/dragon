@@ -1,0 +1,17 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/dragon
+dragon.so
+dragon.dylib
+dragon.dll
+dragon.a
+dragon.lib
+dragon-test-*
+*.exe
+*.pdb
+*.o
+*.obj
+*.lst
+.vscode
