@@ -198,4 +198,89 @@ No address on file`;
         ];
 
     }
+
+    unittest
+    {
+        auto nestedTemplate = "{{user.profile.firstName}} {{user.profile.lastName}} ({{user.role}})";
+        auto nestedContext = [
+            "user": templateValue([
+                "profile": templateValue([
+                    "firstName": templateValue("John"),
+                    "lastName": templateValue("Doe")
+                ]),
+                "role": templateValue("admin")
+            ])
+        ];
+        assert(renderTemplate(nestedTemplate, nestedContext) == "John Doe (admin)");
+        writeln("Test 9 passed");
+        auto arrayTemplate = "First item: {{items.0}}, Last item: {{items.2}}";
+        auto arrayContext = [
+            "items": templateValue([
+                templateValue("apple"),
+                templateValue("banana"),
+                templateValue("cherry")
+            ])
+        ];
+        writeln(renderTemplate(arrayTemplate, arrayContext));
+        assert(renderTemplate(arrayTemplate, arrayContext) == "First item: apple, Last item: cherry");
+        writeln("Test 10 passed");
+        auto complexTemplate = `
+        {{#users}}
+        - {{name}} ({{email}})
+          Roles: {{#roles}}{{.}} {{/roles}}
+          {{#address}}
+          Address: {{street}}, {{city}}, {{country}}
+          {{/address}}
+        {{/users}}`;
+
+        auto complexContext = [
+            "users": templateValue([
+                templateValue([
+                    "name": templateValue("Alice"),
+                    "email": templateValue("alice@example.com"),
+                    "roles": templateValue([
+                        templateValue("admin"),
+                        templateValue("editor")
+                    ]),
+                    "address": templateValue([
+                        "street": templateValue("123 Main St"),
+                        "city": templateValue("Springfield"),
+                        "country": templateValue("USA")
+                    ])
+                ])
+            ])
+        ];
+
+        auto expectedOutput = `
+        - Alice (alice@example.com)
+          Roles: admin editor 
+          Address: 123 Main St, Springfield, USA
+        `;
+        assert(renderTemplate(complexTemplate.strip(), complexContext) == expectedOutput.strip());
+        writeln("Test 11 passed");
+        auto specialCharsTemplate = "Escaped: {{special}} | Unescaped: {{{special}}}";
+        auto specialContext = [
+            "special": templateValue("<div>Test & More: \"quotes\" & 'apos;")
+        ];
+        assert(renderTemplate(specialCharsTemplate, specialContext) == "Escaped: &lt;div&gt;Test &amp; More: &quot;quotes&quot; &amp; &#x27;apos;&#x27; | Unescaped: <div>Test & More: \"quotes\" & 'apos;");
+        writeln("Test 12 passed");
+
+        assert(renderTemplate("", null) == "");
+        assert(renderTemplate("  ", null) == "  ");
+        assert(renderTemplate("{{}}", null) == "");
+        assert(renderTemplate("{{non.existent}}", null) == "");
+        assert(renderTemplate("{{#non.existent}}Should not show{{/non.existent}}", null) == "");
+        assert(renderTemplate("{{^non.existent}}Should show{{/non.existent}}", null) == "Should show");
+        writeln("Test 13 passed");
+
+        auto numberTemplate = "Count: {{count}}, Price: ${{price}}";
+        auto numberContext = [
+            "count": templateValue(42L),
+            "price": templateValue(9.99)
+        ];
+        assert(renderTemplate(numberTemplate, numberContext) == "Count: 42, Price: $9.99");
+        writeln("Test 14 passed");
+
+        writeln("All additional tests passed!");
+    }
 }
