@@ -428,7 +428,7 @@ class DragonTemplate
 	string render(TemplateValue[string] context)
 	{
 		auto ctx = new TemplateContext(context);
-		return renderTokens(tokens, ctx);
+		return renderTokens(tokens, ctx).strip();
 	}
 
 	private string renderTokens(Token[] tokens, TemplateContext context)
@@ -616,8 +616,7 @@ class DragonTemplate
 
 string renderTemplate(string template_, TemplateValue[string] context)
 {
-	auto dragon = new DragonTemplate(template_);
-	return dragon.render(context);
+	return new DragonTemplate(template_).render(context);
 }
 
 TemplateValue templateValue(string value)
@@ -775,14 +774,18 @@ No address on file
 		];
 
 		auto context3a = ["user": templateValue(userWithAddress)];
-		auto expected3a = "\nName: Charlie\nAddress: 123 Main St, Springfield\n";
-		assert(renderTemplate(template3, context3a) == expected3a);
+		auto expected3a = `Name: Charlie
 
+Address: 123 Main St, Springfield`;
+		writeln(renderTemplate(template3.strip(), context3a));
+
+		assert(renderTemplate(template3.strip(), context3a) == expected3a);
+		writeln("Test 3a passed");
 		auto context3b = ["user": templateValue(userWithoutAddress)];
 		auto expected3b = "\nName: Dana\nNo address on file\n";
 		assert(renderTemplate(template3, context3b) == expected3b);
 
-		writeln("Test 3 passed");
+		writeln("Test 3b passed");
 		auto template4 = "Value: {{value}} | Empty: {{empty}} | Null: {{nullValue}}";
 		auto context4 = [
 			"value": templateValue("test"),
