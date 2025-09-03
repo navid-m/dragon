@@ -55,6 +55,9 @@ class TemplateString : TemplateValue
 		=> false;
 }
 
+/** 
+ * Template number value.
+ */
 class TemplateNumber : TemplateValue
 {
 	double value;
@@ -88,6 +91,9 @@ class TemplateNumber : TemplateValue
 		=> false;
 }
 
+/** 
+ * Template boolean value.
+ */
 class TemplateBool : TemplateValue
 {
 	bool value;
@@ -111,6 +117,9 @@ class TemplateBool : TemplateValue
 
 }
 
+/** 
+ * Template null value.
+ */
 class TemplateNull : TemplateValue
 {
 	override string toString() const
@@ -126,6 +135,9 @@ class TemplateNull : TemplateValue
 		=> false;
 }
 
+/** 
+ * Template object value.
+ */
 class TemplateObject : TemplateValue
 {
 	TemplateValue[string] data;
@@ -160,6 +172,9 @@ class TemplateObject : TemplateValue
 		=> true;
 }
 
+/** 
+ * Template array value.
+ */
 class TemplateArray : TemplateValue
 {
 	TemplateValue[] items;
@@ -182,6 +197,9 @@ class TemplateArray : TemplateValue
 		=> false;
 }
 
+/** 
+ * Template token type.
+ */
 enum TokenType
 {
 	Text,
@@ -194,6 +212,9 @@ enum TokenType
 	Partial
 }
 
+/** 
+ * Template token.
+ */
 struct Token
 {
 	TokenType type;
@@ -202,6 +223,9 @@ struct Token
 	size_t position;
 }
 
+/** 
+ * The template context.
+ */
 class TemplateContext
 {
 	TemplateValue[string] data;
@@ -574,81 +598,49 @@ class DragonTemplate
 }
 
 string renderTemplate(string template_, TemplateValue[string] context)
-{
-	return new DragonTemplate(template_).render(context);
-}
+	=> new DragonTemplate(template_).render(context);
 
 TemplateValue templateValue(string value)
-{
-	return new TemplateString(value);
-}
+	=> new TemplateString(value);
 
 TemplateValue templateValue(long value)
-{
-	return new TemplateNumber(value);
-}
+	=> new TemplateNumber(value);
 
 TemplateValue templateValue(int value)
-{
-	return new TemplateNumber(cast(long) value);
-}
+	=> new TemplateNumber(cast(long) value);
 
 TemplateValue templateValue(uint value)
-{
-	return new TemplateNumber(cast(long) value);
-}
+	=> new TemplateNumber(cast(long) value);
 
 TemplateValue templateValue(short value)
-{
-	return new TemplateNumber(cast(long) value);
-}
+	=> new TemplateNumber(cast(long) value);
 
 TemplateValue templateValue(ushort value)
-{
-	return new TemplateNumber(cast(long) value);
-}
+	=> new TemplateNumber(cast(long) value);
 
 TemplateValue templateValue(byte value)
-{
-	return new TemplateNumber(cast(long) value);
-}
+	=> new TemplateNumber(cast(long) value);
 
 TemplateValue templateValue(ubyte value)
-{
-	return new TemplateNumber(cast(long) value);
-}
+	=> new TemplateNumber(cast(long) value);
 
 TemplateValue templateValue(double value)
-{
-	return new TemplateNumber(value);
-}
+	=> new TemplateNumber(value);
 
 TemplateValue templateValue(float value)
-{
-	return new TemplateNumber(cast(double) value);
-}
+	=> new TemplateNumber(cast(double) value);
 
 TemplateValue templateValue(real value)
-{
-	return new TemplateNumber(cast(double) value);
-}
+	=> new TemplateNumber(cast(double) value);
 
 TemplateValue templateValue(bool value)
-{
-	return new TemplateBool(value);
-}
+	=> new TemplateBool(value);
 
 TemplateValue templateValue(TemplateValue[string] obj)
-{
-	return new TemplateObject(obj);
-}
+	=> new TemplateObject(obj);
 
 TemplateValue templateValue(TemplateValue[] arr)
-{
-	return new TemplateArray(arr);
-}
+	=> new TemplateArray(arr);
 
 TemplateValue templateValue(typeof(null) value)
-{
-	return new TemplateNull();
-}
+	=> new TemplateNull();
