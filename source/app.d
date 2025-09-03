@@ -156,6 +156,20 @@ class TemplateObject : TemplateValue
 		this.data = data ? data : (TemplateValue[string]).init;
 	}
 
+	bool hasKey(string key)
+	{
+		return (key in data) !is null;
+	}
+
+	TemplateValue getValue(string key)
+	{
+		if (key in data)
+		{
+			return data[key];
+		}
+		return new TemplateNull();
+	}
+
 	override string toString() const
 	{
 		return "[Object]";
@@ -240,28 +254,84 @@ class TemplateContext
 
 	TemplateValue getValue(string key)
 	{
-		if (key in data)
+		auto parts = split(key, ".");
+		TemplateValue current;
+
+		if (parts[0] in data)
 		{
-			return data[key];
+			current = data[parts[0]];
 		}
-		if (parent !is null)
+		else if (parent !is null)
 		{
 			return parent.getValue(key);
 		}
-		return new TemplateNull();
+		else
+		{
+			return new TemplateNull();
+		}
+
+		for (size_t i = 1; i < parts.length; i++)
+		{
+			if (current.isObject())
+			{
+				auto obj = current.asObject();
+				if (obj.hasKey(parts[i]))
+				{
+					current = obj.getValue(parts[i]);
+				}
+				else
+				{
+					return new TemplateNull();
+				}
+			}
+			else
+			{
+				return new TemplateNull();
+			}
+		}
+
+		return current;
 	}
 
 	bool hasKey(string key)
 	{
-		if (key in data)
+		auto parts = split(key, ".");
+		TemplateValue current;
+
+		if (parts[0] in data)
 		{
-			return true;
+			current = data[parts[0]];
 		}
-		if (parent !is null)
+		else if (parent !is null)
 		{
 			return parent.hasKey(key);
 		}
-		return false;
+		else
+		{
+			return false;
+		}
+
+		for (size_t i = 1; i < parts.length; i++)
+		{
+			if (current.isObject())
+			{
+				auto obj = current.asObject();
+				if (obj.hasKey(parts[i]))
+				{
+					current = obj.getValue(parts[i]);
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
 
@@ -658,7 +728,7 @@ version (unittest)
 		assert(renderTemplate(template5, context5a) == "Not empty");
 		assert(renderTemplate(template5, context5b) == "Empty!");
 
-		writeln("All tests passed!");
+		writeln("All first pass tests passed.");
 	}
 
 	unittest
