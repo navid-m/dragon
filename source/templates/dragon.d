@@ -813,6 +813,7 @@ No address on file`;
 			templateValue("Third")
 		];
 		auto context6 = ["items": templateValue(items)];
+
 		writeln(renderTemplate(template6.strip(), context6));
 		assert(renderTemplate(template6, context6) == "0. First 1. Second 2. Third");
 
@@ -822,6 +823,7 @@ No address on file`;
 			templateValue("A"),
 			templateValue("B")
 		];
+
 		auto outer = ["inner": templateValue(inner)];
 		auto context7 = ["outer": templateValue(outer)];
 		writeln(renderTemplate(template7.strip(), context7));
