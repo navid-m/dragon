@@ -242,8 +242,11 @@ class TemplateContext
 		auto parts = split(key, ".");
 		TemplateValue current;
 
+		if (parts.length == 0)
+			return new TemplateNull();
 		if (parts[0] in data)
 			current = data[parts[0]];
+
 		else if (parent !is null)
 			return parent.getValue(key);
 		else
