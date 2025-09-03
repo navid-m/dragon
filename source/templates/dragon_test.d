@@ -326,12 +326,10 @@ No address on file`;
         auto expected18 = "Fruits: Apple Banana \nVegetables: Carrot Broccoli";
         assert(renderTemplate(template18, context18) == expected18);
         writeln("Test 18 passed");
-
         auto template19 = "User: {{user.name}}, Age: {{user.age}}";
         auto context19 = ["user": templateValue(["name": templateValue("Eve")])];
         assert(renderTemplate(template19, context19) == "User: Eve, Age:");
         writeln("Test 19 passed");
-
         auto template20 = "{{#node}}{{value}}{{#children}} -> {{.}}{{/children}}{{/node}}";
         auto context20 = [
             "node": templateValue([
