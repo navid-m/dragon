@@ -1,4 +1,4 @@
-module dragon;
+module dragon.templates;
 
 import std.stdio;
 import std.string;
@@ -882,8 +882,4 @@ No address on file`;
 		writeln("Generated HTML:");
 		writeln(renderTemplate(htmlTemplate, htmlContext));
 	}
-}
-
-void main()
-{
 }

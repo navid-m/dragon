@@ -1,3 +1,3 @@
 module dragon;
 
-public import dragon;
+public import dragon.templates;
