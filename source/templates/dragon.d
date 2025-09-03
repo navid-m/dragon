@@ -98,47 +98,32 @@ class TemplateBool : TemplateValue
 	}
 
 	override string toString() const
-	{
-		return value ? "true" : "false";
-	}
+		=> value ? "true" : "false";
 
 	override bool isTruthy() const
-	{
-		return value;
-	}
+		=> value;
 
 	override bool isArray() const
-	{
-		return false;
-	}
+		=> false;
 
 	override bool isObject() const
-	{
-		return false;
-	}
+		=> false;
+
 }
 
 class TemplateNull : TemplateValue
 {
 	override string toString() const
-	{
-		return "";
-	}
+		=> "";
 
 	override bool isTruthy() const
-	{
-		return false;
-	}
+		=> false;
 
 	override bool isArray() const
-	{
-		return false;
-	}
+		=> false;
 
 	override bool isObject() const
-	{
-		return false;
-	}
+		=> false;
 }
 
 class TemplateObject : TemplateValue
@@ -151,9 +136,7 @@ class TemplateObject : TemplateValue
 	}
 
 	bool hasKey(string key)
-	{
-		return (key in data) !is null;
-	}
+		=> (key in data) !is null;
 
 	TemplateValue getValue(string key)
 	{
@@ -165,24 +148,16 @@ class TemplateObject : TemplateValue
 	}
 
 	override string toString() const
-	{
-		return "[Object]";
-	}
+		=> "[Object]";
 
 	override bool isTruthy() const
-	{
-		return data.length > 0;
-	}
+		=> data.length > 0;
 
 	override bool isArray() const
-	{
-		return false;
-	}
+		=> false;
 
 	override bool isObject() const
-	{
-		return true;
-	}
+		=> true;
 }
 
 class TemplateArray : TemplateValue
@@ -195,24 +170,16 @@ class TemplateArray : TemplateValue
 	}
 
 	override string toString() const
-	{
-		return "[Array]";
-	}
+		=> "[Array]";
 
 	override bool isTruthy() const
-	{
-		return items.length > 0;
-	}
+		=> items.length > 0;
 
 	override bool isArray() const
-	{
-		return true;
-	}
+		=> true;
 
 	override bool isObject() const
-	{
-		return false;
-	}
+		=> false;
 }
 
 enum TokenType
