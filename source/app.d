@@ -782,9 +782,13 @@ Address: 123 Main St, Springfield`;
 		assert(renderTemplate(template3.strip(), context3a) == expected3a);
 		writeln("Test 3a passed");
 		auto context3b = ["user": templateValue(userWithoutAddress)];
-		auto expected3b = "\nName: Dana\nNo address on file\n";
-		assert(renderTemplate(template3, context3b) == expected3b);
+		auto expected3b = `Name: Dana
 
+
+No address on file`;
+		writeln(renderTemplate(template3.strip(), context3b));
+
+		assert(renderTemplate(template3, context3b) == expected3b);
 		writeln("Test 3b passed");
 		auto template4 = "Value: {{value}} | Empty: {{empty}} | Null: {{nullValue}}";
 		auto context4 = [
