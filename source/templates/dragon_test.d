@@ -279,7 +279,70 @@ No address on file`;
         ];
         assert(renderTemplate(numberTemplate, numberContext) == "Count: 42, Price: $9.99");
         writeln("Test 14 passed");
+    }
 
-        writeln("All additional tests passed.");
+    unittest
+    {
+        auto template15 = "Hello, {{ name }}!";
+        auto context15 = ["name": templateValue("WhitespaceUser")];
+        assert(renderTemplate(template15, context15) == "Hello, WhitespaceUser!");
+        writeln("Test 15 passed");
+
+        auto template16 = "Country: {{user.address.location.country}}";
+        auto context16 = [
+            "user": templateValue([
+                "address": templateValue(
+                    [
+                    "location": templateValue([
+                        "country": templateValue("Wonderland")
+                    ])
+                ])
+            ])
+        ];
+        assert(renderTemplate(template16, context16) == "Country: Wonderland");
+        writeln("Test 16 passed");
+
+        auto template17 = "{{^items}}No items found{{/items}}";
+        auto context17b = ["items": templateValue([templateValue("X")])];
+        assert(renderTemplate(template17, context17b) == "");
+        writeln("Test 17 passed");
+        auto template18 = "{{#categories}}{{name}}: {{#items}}{{.}} {{/items}}\n{{/categories}}";
+        auto context18 = [
+            "categories": templateValue([
+                templateValue([
+                    "name": templateValue("Fruits"),
+                    "items": templateValue([
+                        templateValue("Apple"), templateValue("Banana")
+                    ])
+                ]),
+                templateValue([
+                    "name": templateValue("Vegetables"),
+                    "items": templateValue([
+                        templateValue("Carrot"), templateValue("Broccoli")
+                    ])
+                ])
+            ])
+        ];
+        auto expected18 = "Fruits: Apple Banana \nVegetables: Carrot Broccoli";
+        assert(renderTemplate(template18, context18) == expected18);
+        writeln("Test 18 passed");
+
+        auto template19 = "User: {{user.name}}, Age: {{user.age}}";
+        auto context19 = ["user": templateValue(["name": templateValue("Eve")])];
+        assert(renderTemplate(template19, context19) == "User: Eve, Age:");
+        writeln("Test 19 passed");
+
+        auto template20 = "{{#node}}{{value}}{{#children}} -> {{.}}{{/children}}{{/node}}";
+        auto context20 = [
+            "node": templateValue([
+                "value": templateValue("Root"),
+                "children": templateValue([
+                    templateValue("Child1"),
+                    templateValue("Child2")
+                ])
+            ])
+        ];
+        assert(renderTemplate(template20, context20) == "Root -> Child1 -> Child2");
+        writeln("Test 20 passed");
     }
 }
