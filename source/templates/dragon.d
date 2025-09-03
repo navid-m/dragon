@@ -1,3 +1,9 @@
+/**
+ * Description: Dragon - An HTML template engine
+ * Authors: Navid M
+ * License: GPL-3.0-only
+ */
+
 module dragon.templates;
 
 import std.stdio;
@@ -8,6 +14,9 @@ import std.algorithm;
 import std.range;
 import std.regex;
 
+/** 
+ * Base class for all template values.
+ */
 abstract class TemplateValue
 {
 	abstract bool isTruthy() const;
@@ -21,6 +30,9 @@ abstract class TemplateValue
 		=> cast(TemplateObject) this;
 }
 
+/** 
+ * String template value.
+ */
 class TemplateString : TemplateValue
 {
 	string value;
