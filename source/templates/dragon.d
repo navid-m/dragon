@@ -243,17 +243,11 @@ class TemplateContext
 		TemplateValue current;
 
 		if (parts[0] in data)
-		{
 			current = data[parts[0]];
-		}
 		else if (parent !is null)
-		{
 			return parent.getValue(key);
-		}
 		else
-		{
 			return new TemplateNull();
-		}
 
 		for (size_t i = 1; i < parts.length; i++)
 		{
@@ -261,18 +255,36 @@ class TemplateContext
 			{
 				auto obj = current.asObject();
 				if (obj.hasKey(parts[i]))
-				{
 					current = obj.getValue(parts[i]);
-				}
 				else
 				{
-					return new TemplateNull();
+					try
+					{
+						size_t index = to!size_t(parts[i]);
+						if (current.isArray() && index < current.asArray().items.length)
+							current = current.asArray().items[index];
+						else
+							return new TemplateNull();
+					}
+					catch (Exception)
+						return new TemplateNull();
 				}
 			}
-			else
+			else if (current.isArray())
 			{
-				return new TemplateNull();
+				try
+				{
+					size_t index = to!size_t(parts[i]);
+					if (index < current.asArray().items.length)
+						current = current.asArray().items[index];
+					else
+						return new TemplateNull();
+				}
+				catch (Exception)
+					return new TemplateNull();
 			}
+			else
+				return new TemplateNull();
 		}
 
 		return current;
