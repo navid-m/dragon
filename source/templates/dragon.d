@@ -524,9 +524,9 @@ class DragonTemplate
 				if (value.isArray())
 				{
 					auto arr = value.asArray();
-					foreach (item; arr.items)
+					foreach (i, item; arr.items)
 					{
-						TemplateValue[string] itemContext = createItemContext(item);
+						TemplateValue[string] itemContext = createItemContext(item, i);
 						auto childContext = new TemplateContext(itemContext, context);
 						result ~= renderTokens(sectionTokens, childContext);
 					}
@@ -547,18 +547,16 @@ class DragonTemplate
 		return SectionResult(result, endIndex + 1);
 	}
 
-	private TemplateValue[string] createItemContext(TemplateValue item)
+	private TemplateValue[string] createItemContext(TemplateValue item, size_t index = size_t.max)
 	{
 		TemplateValue[string] itemContext;
 
 		if (item.isObject())
-		{
 			itemContext = item.asObject().data;
-		}
 		else
-		{
 			itemContext["."] = item;
-		}
+		if (index != size_t.max)
+			itemContext["@index"] = new TemplateNumber(cast(long) index);
 
 		return itemContext;
 	}
@@ -815,7 +813,8 @@ No address on file`;
 			templateValue("Third")
 		];
 		auto context6 = ["items": templateValue(items)];
-		assert(renderTemplate(template6, context6) == "0. First 1. Second 2. Third ");
+		writeln(renderTemplate(template6.strip(), context6));
+		assert(renderTemplate(template6, context6) == "0. First 1. Second 2. Third");
 
 		writeln("Test 6 passed");
 		auto template7 = "{{#outer}}{{#inner}}{{.}} {{/inner}}{{/outer}}";
@@ -825,7 +824,8 @@ No address on file`;
 		];
 		auto outer = ["inner": templateValue(inner)];
 		auto context7 = ["outer": templateValue(outer)];
-		assert(renderTemplate(template7, context7) == "A B ");
+		writeln(renderTemplate(template7.strip(), context7));
+		assert(renderTemplate(template7, context7) == "A B");
 
 		writeln("Test 7 passed");
 		assert(renderTemplate("", null) == "");
@@ -880,7 +880,5 @@ No address on file`;
 			"users": templateValue(users)
 		];
 
-		writeln("Generated HTML:");
-		writeln(renderTemplate(htmlTemplate, htmlContext));
 	}
 }
