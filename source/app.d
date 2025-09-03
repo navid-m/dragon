@@ -663,17 +663,100 @@ version (unittest)
 
 	unittest
 	{
-		writeln("=== Dragon Mustache Template Engine Demo ===\n");
-
 		auto template1 = "Hello {{name}}, you have {{count}} messages!";
 		auto context1 = [
 			"name": templateValue("Alice"),
 			"count": templateValue(5L)
 		];
-		writeln("Template: ", template1);
-		writeln("Result: ", renderTemplate(template1, context1));
-		writeln();
+		assert(renderTemplate(template1, context1) == "Hello Alice, you have 5 messages!");
 
+		writeln("Test 1 passed");
+		auto template2 = "User: {{user.name}} ({{user.email}})";
+		auto user = [
+			"name": templateValue("Bob"),
+			"email": templateValue("bob@example.com")
+		];
+		auto context2 = ["user": templateValue(user)];
+		writeln(renderTemplate(template2, context2));
+		assert(renderTemplate(template2, context2) == "User: Bob (bob@example.com)");
+
+		writeln("Test 2 passed");
+		auto template3 = `
+{{#user}}
+Name: {{name}}
+{{#address}}
+Address: {{street}}, {{city}}
+{{/address}}
+{{^address}}
+No address on file
+{{/address}}
+{{/user}}`;
+
+		auto userWithAddress = [
+			"name": templateValue("Charlie"),
+			"address": templateValue([
+				"street": templateValue("123 Main St"),
+				"city": templateValue("Springfield")
+			])
+		];
+
+		auto userWithoutAddress = [
+			"name": templateValue("Dana")
+		];
+
+		auto context3a = ["user": templateValue(userWithAddress)];
+		auto expected3a = "\nName: Charlie\nAddress: 123 Main St, Springfield\n";
+		assert(renderTemplate(template3, context3a) == expected3a);
+
+		auto context3b = ["user": templateValue(userWithoutAddress)];
+		auto expected3b = "\nName: Dana\nNo address on file\n";
+		assert(renderTemplate(template3, context3b) == expected3b);
+
+		writeln("Test 3 passed");
+		auto template4 = "Value: {{value}} | Empty: {{empty}} | Null: {{nullValue}}";
+		auto context4 = [
+			"value": templateValue("test"),
+			"empty": templateValue(""),
+			"nullValue": templateValue(null)
+		];
+		assert(renderTemplate(template4, context4) == "Value: test | Empty:  | Null: ");
+
+		writeln("Test 4 passed");
+		auto template5 = "Escaped: {{html}} | Unescaped: {{{html}}}}";
+		auto context5 = ["html": templateValue("<div>Test & More</div>")];
+		auto expected5 = "Escaped: &lt;div&gt;Test &amp; More&lt;/div&gt; | Unescaped: <div>Test & More</div>";
+		assert(renderTemplate(template5, context5) == expected5);
+
+		writeln("Test 5 passed");
+		auto template6 = "{{#items}}{{@index}}. {{.}} {{/items}}";
+		auto items = [
+			templateValue("First"),
+			templateValue("Second"),
+			templateValue("Third")
+		];
+		auto context6 = ["items": templateValue(items)];
+		assert(renderTemplate(template6, context6) == "0. First 1. Second 2. Third ");
+
+		writeln("Test 6 passed");
+		auto template7 = "{{#outer}}{{#inner}}{{.}} {{/inner}}{{/outer}}";
+		auto inner = [
+			templateValue("A"),
+			templateValue("B")
+		];
+		auto outer = ["inner": templateValue(inner)];
+		auto context7 = ["outer": templateValue(outer)];
+		assert(renderTemplate(template7, context7) == "A B ");
+
+		writeln("Test 7 passed");
+		assert(renderTemplate("", null) == "");
+		assert(renderTemplate("Hello World!", null) == "Hello World!");
+
+		writeln("Test 8 passed");
+		assert(renderTemplate("{{nonexistent}}", null) == "");
+	}
+
+	unittest
+	{
 		auto htmlTemplate = `
 <!DOCTYPE html>
 <html>
