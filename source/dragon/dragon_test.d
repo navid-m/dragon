@@ -261,7 +261,8 @@ No address on file`;
             "special": templateValue("<div>Test & More: \"quotes\" & 'apos;")
         ];
 
-        assert(renderTemplate(specialCharsTemplate, specialContext) == "Escaped: {{special}} | Unescaped: <div>Test & More: \"quotes\" & 'apos;");
+        assert(renderTemplate(specialCharsTemplate, specialContext) ==
+                "Escaped: {{special}} | Unescaped: <div>Test & More: \"quotes\" & 'apos;");
         writeln("Test 12 passed");
 
         assert(renderTemplate("", null) == "");
